@@ -20,7 +20,7 @@ Being an administrator, you can delete screenshots from the server with just a f
 ## ☁️ Cloudflare Integration
 - For those utilizing [Cloudflare](https://www.cloudflare.com), enhancing your security measures by incorporating specific expressions into the [Web Application Firewall](https://www.cloudflare.com/learning/ddos/glossary/web-application-firewall-waf) (WAF) comes highly recommended.
   This approach can significantly bolster your website's defense.
-  Please visit [this](https://github.com/sefinek24/cloudflare-waf-expressions) repository.
+  Please visit [this](https://github.com/sefinek/cloudflare-waf-expressions) repository.
 
 - If you are using any proxy server (for example, Cloudflare), make sure to adjust the `trust proxy` setting in the [index.js](index.js) file.
   A value of 1 indicates a single proxy server. This adjustment is necessary for the server to accurately read the IP addresses of visitors.
@@ -28,7 +28,7 @@ Being an administrator, you can delete screenshots from the server with just a f
 ## 📝 How to use?
 1. Clone the repository:
     ```bash
-    git clone https://github.com/sefinek24/node-sharex-server.git
+    git clone https://github.com/sefinek/node-sharex-server.git
     ```
 2. Install the necessary packages using `npm install`.
 3. Rename the `.env.default` file to `.env` and fill in the necessary data.
@@ -48,7 +48,7 @@ Being an administrator, you can delete screenshots from the server with just a f
 8. That's it! You can now take screenshots and upload them to your server.
 
 ## 💙 Thank you
-If you find this repository useful, please consider giving it a star. If you need assistance or have any questions, feel free to open a new [Issue](https://github.com/sefinek24/node-sharex-server/issues).
+If you find this repository useful, please consider giving it a star. If you need assistance or have any questions, feel free to open a new [Issue](https://github.com/sefinek/node-sharex-server/issues).
 
 ## 📑 License
 This project is licensed under the [MIT License](LICENSE).
