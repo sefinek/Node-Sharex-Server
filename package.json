@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sefinek/node-sharex-server.git"
+    "url": "git+https://github.com/sefinek/Node-Sharex-Server.git"
   },
   "author": "Sefinek <contact@sefinek.net> (https://sefinek.net)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sefinek/node-sharex-server/issues"
+    "url": "https://github.com/sefinek/Node-Sharex-Server/issues"
   },
-  "homepage": "https://github.com/sefinek/node-sharex-servert#readme",
+  "homepage": "https://github.com/sefinek/Node-Sharex-Servert#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

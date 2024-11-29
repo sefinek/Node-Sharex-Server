@@ -28,7 +28,7 @@ Being an administrator, you can delete screenshots from the server with just a f
 ## 📝 How to use?
 1. Clone the repository:
     ```bash
-    git clone https://github.com/sefinek/node-sharex-server.git
+    git clone https://github.com/sefinek/Node-Sharex-Server.git
     ```
 2. Install the necessary packages using `npm install`.
 3. Rename the `.env.default` file to `.env` and fill in the necessary data.
@@ -48,7 +48,7 @@ Being an administrator, you can delete screenshots from the server with just a f
 8. That's it! You can now take screenshots and upload them to your server.
 
 ## 💙 Thank you
-If you find this repository useful, please consider giving it a star. If you need assistance or have any questions, feel free to open a new [Issue](https://github.com/sefinek/node-sharex-server/issues).
+If you find this repository useful, please consider giving it a star. If you need assistance or have any questions, feel free to open a new [Issue](https://github.com/sefinek/Node-Sharex-Server/issues).
 
 ## 📑 License
 This project is licensed under the [MIT License](LICENSE).
