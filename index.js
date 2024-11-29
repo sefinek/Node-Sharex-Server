@@ -48,7 +48,7 @@ const server = http.createServer(async (req, res) => {
 			}, null, 3));
 		} else {
 			serveStatic('public')(req, res, err => {
-				if (err) internalError(err, req, res); else notFound(req, res);
+				if (!err) notFound(req, res); else internalError(err, req, res);
 			});
 		}
 	} catch (err) {
