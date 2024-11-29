@@ -3,15 +3,15 @@ This project allows for the launching of a local server, intended for hosting sc
 
 ## ✔️ What does it include?
 - Configured `CORS`
-- Ready logger `morgan`
-- Ready middleware responsible for handling errors:
+- Ready logger: `morgan`
+- Middlewares ready to handle common errors:
     - `429` Too Many Requests
     - `408` Request Timeout
     - `404` Not Found
     - `500` Internal Server Error
-- Static folder `public`
-- Blocking indexing of screenshots in the `robots.txt` file. Thanks to this, your screenshots will not be public.
-- Ready `ecosystem.config.js` file for [PM2](https://www.npmjs.com/package/pm2)
+- A static `public` folder
+- A `robots.txt` file that blocks screenshot indexing
+- A preconfigured `ecosystem.config.js` file for [PM2](https://www.npmjs.com/package/pm2)
 
 ## 🤔 What is this for?
 With this solution, you don't have to upload screenshots to external services.
