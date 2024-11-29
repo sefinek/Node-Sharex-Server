@@ -3,15 +3,21 @@ require('dotenv').config();
 const http = require('node:http');
 const helmet = require('helmet');
 const cors = require('cors');
+const serveStatic = require('serve-static');
 const morgan = require('./middlewares/morgan.js');
 const ratelimit = require('./middlewares/ratelimit.js');
 const timeout = require('./middlewares/timeout.js');
 const getClientIp = require('./middlewares/other/getClientIp.js');
-const { internalError } = require('./middlewares/other/errors.js');
-const serveStaticFiles = require('./middlewares/other/serve.js');
+const { notFound, internalError } = require('./middlewares/other/errors.js');
 const { version, description } = require('./package.json');
 
-const middlewares = [cors(), helmet({ crossOriginResourcePolicy: false }), morgan, ratelimit, timeout];
+const middlewares = [
+	cors(),
+	helmet({ crossOriginResourcePolicy: false }),
+	morgan,
+	process.env.NODE_ENV === 'production' ? ratelimit : null,
+	timeout
+].filter(Boolean);
 
 const applyMiddlewares = async (req, res) => {
 	req.clientRealIP = getClientIp(req);
@@ -28,8 +34,7 @@ const applyMiddlewares = async (req, res) => {
 };
 
 const server = http.createServer(async (req, res) => {
-	const middlewaresApplied = await applyMiddlewares(req, res);
-	if (!middlewaresApplied) return;
+	if (!(await applyMiddlewares(req, res))) return;
 
 	try {
 		if (req.url === '/') {
@@ -40,24 +45,16 @@ const server = http.createServer(async (req, res) => {
 				message: description,
 				version,
 				github: 'https://github.com/sefinek/node-sharex-server'
-				// ip: req.clientRealIP
 			}, null, 3));
 		} else {
-			await serveStaticFiles(req, res);
+			serveStatic('public')(req, res, err => {
+				if (err) internalError(err, req, res); else notFound(req, res);
+			});
 		}
 	} catch (err) {
 		internalError(err, req, res);
 	}
 });
 
-server.listen(process.env.PORT, () => {
-	if (process.env.NODE_ENV === 'production') {
-		try {
-			process.send('ready');
-		} catch (err) {
-			console.log('Failed to send ready signal to parent process.', err.message);
-		}
-	}
-
-	console.log(`The server is running at http://127.0.0.1:${process.env.PORT}`);
-});
+const port = process.env.PORT;
+server.listen(port, () => process.send ? process.send('ready') : console.log(`Server running at http://127.0.0.1:${port}`));
