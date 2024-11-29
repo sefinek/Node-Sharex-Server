@@ -1,5 +1,5 @@
 const { onTimeout } = require('./other/errors.js');
-const TIMEOUT = 7000;
+const TIMEOUT = 8000;
 
 module.exports = (req, res, next) => {
 	const timer = setTimeout(() => onTimeout(req, res), TIMEOUT);
