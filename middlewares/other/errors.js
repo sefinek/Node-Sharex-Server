@@ -4,7 +4,7 @@ const IMAGES = {
 	notFound: 'images/404.png',
 	rateLimit: 'images/429.png',
 	internal: 'images/500.png',
-	timeout: 'images/503.png'
+	timeout: 'images/503.png',
 };
 
 const sendFile = (res, statusCode, filePath) => {

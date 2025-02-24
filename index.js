@@ -16,7 +16,7 @@ const middlewares = [
 	helmet({ crossOriginResourcePolicy: false }),
 	morgan,
 	process.env.NODE_ENV === 'production' ? ratelimit : null,
-	timeout
+	timeout,
 ].filter(Boolean);
 
 const applyMiddlewares = async (req, res) => {
@@ -44,7 +44,7 @@ const server = http.createServer(async (req, res) => {
 				status: 200,
 				message: description,
 				version,
-				github: 'https://github.com/sefinek/Node-Sharex-Server'
+				github: 'https://github.com/sefinek/Node-Sharex-Server',
 			}, null, 3));
 		} else {
 			serveStatic('public')(req, res, err => {
