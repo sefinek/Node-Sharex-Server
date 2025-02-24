@@ -2,21 +2,21 @@
   "name": "node-sharex-server",
   "version": "2.1.1",
   "description": "Node.js project for hosting screenshots captured with ShareX.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "up": "ncu -u && npm install && npm update && npm audit fix"
+  "homepage": "https://github.com/sefinek/Node-Sharex-Servert#readme",
+  "bugs": {
+    "url": "https://github.com/sefinek/Node-Sharex-Server/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sefinek/Node-Sharex-Server.git"
   },
-  "author": "Sefinek <contact@sefinek.net> (https://sefinek.net)",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/sefinek/Node-Sharex-Server/issues"
+  "author": "Sefinek <contact@sefinek.net> (https://sefinek.net)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "up": "ncu -u && npm install && npm update && npm audit fix"
   },
-  "homepage": "https://github.com/sefinek/Node-Sharex-Servert#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
