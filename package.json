@@ -19,13 +19,13 @@
   "homepage": "https://github.com/sefinek/Node-Sharex-Servert#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.4.7",
     "helmet": "^8.0.0",
     "morgan": "^1.10.0",
     "serve-static": "^1.16.2"
   },
   "devDependencies": {
-    "@eslint/js": "^9.15.0",
-    "globals": "^15.12.0"
+    "@eslint/js": "^9.21.0",
+    "globals": "^16.0.0"
   }
 }
