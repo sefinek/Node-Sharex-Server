@@ -3,31 +3,24 @@ module.exports = {
 		name: 'sharex',
 		script: './index.js',
 
-		// Configuration options
-		exec_mode: 'fork',
-		max_memory_restart: '480M',
-
-		// Monitoring changes in files and restarting the application
-		watch: false,
-		ignore_watch: ['.git', 'node_modules', 'logs', '.eslintrc.js', 'ecosystem.config.js'],
-
-		// Logging settings
+		// Logging configuration
 		log_date_format: 'HH:mm:ss.SSS DD.MM.YYYY',
 		merge_logs: true,
 		log_file: '/home/sefinek/logs/www/screenshots.sefinek.net/combined.log',
 		out_file: '/home/sefinek/logs/www/screenshots.sefinek.net/out.log',
 		error_file: '/home/sefinek/logs/www/screenshots.sefinek.net/error.log',
 
-		// Application restart policy
+		// Application restart policy settings
 		wait_ready: true,
 		autorestart: true,
-		max_restarts: 5,
-		restart_delay: 4000,
-		min_uptime: 13000,
+		max_restarts: 10,
+		min_uptime: 20000,
+		restart_delay: 5000,
+		exp_backoff_restart_delay: 3000,
 
-		// Environment variables
+		// Environment variables configuration
 		env: {
-			NODE_ENV: 'production'
-		}
-	}]
+			NODE_ENV: 'production',
+		},
+	}],
 };
