@@ -1,11 +1,26 @@
 const { onTimeout } = require('./other/errors.js');
-const TIMEOUT = 8000;
+const TIMEOUT = 7000;
 
 module.exports = (req, res, next) => {
-	const timer = setTimeout(() => onTimeout(req, res), TIMEOUT);
+	let called = false;
 
-	res.once('close', () => clearTimeout(timer));
-	res.once('finish', () => clearTimeout(timer));
+	const timer = setTimeout(() => {
+		if (!res.writableEnded && !called) {
+			called = true;
+			res.timedOut = true;
+			onTimeout(req, res);
+		}
+	}, TIMEOUT);
+
+	const clear = () => {
+		if (!called) {
+			called = true;
+			clearTimeout(timer);
+		}
+	};
+
+	res.once('close', clear);
+	res.once('finish', clear);
 
 	next();
 };
