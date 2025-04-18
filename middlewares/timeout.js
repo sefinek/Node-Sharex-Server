@@ -63,9 +63,8 @@ const handler = opts => {
 				} else {
 					res.status(503).send('Service unavailable');
 				}
-				disableList.forEach(method => {
-					res[method] = accessAttempt.bind(res, method);
-				});
+
+				disableList.forEach(method => {res[method] = accessAttempt.bind(res, method);});
 			}
 		});
 
