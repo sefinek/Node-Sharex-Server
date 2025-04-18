@@ -41,10 +41,10 @@ Being an administrator, you can delete screenshots from the server with just a f
       See [this](https://phoenixnap.com/kb/ubuntu-samba) tutorial.
 7. Configuration:
     - **Windows** \
-      ![windows.png](images/readme/windows.png)
+      ![windows.png](data/images/readme/windows.png)
     - **Sharex** \
-      ![sharex-smb.png](images/readme/sharex-smb.png) \
-      ![paths.png](images/readme/paths.png)
+      ![sharex-smb.png](data/images/readme/sharex-smb.png) \
+      ![paths.png](data/images/readme/paths.png)
 8. That's it! You can now take screenshots and upload them to your server.
 
 ## 💙 Thank you

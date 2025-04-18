@@ -9,30 +9,22 @@ const IMAGES = {
 
 const sendFile = (res, statusCode, filePath) => {
 	access(filePath, constants.R_OK, err => {
-		if (err) {
-			if (!res.headersSent) {
-				res.writeHead(500, { 'Content-Type': 'text/html' });
-				res.end('<h1>File not found or unreadable</h1>');
-			}
-			console.error(`File ${filePath} is inaccessible;`, err);
-			return;
-		}
+		if (res.headersSent) return;
 
-		if (res.headersSent) {
-			console.warn(`Tried to send file after headers sent: ${filePath}`);
-			return;
+		if (err) {
+			console.error(`File ${filePath} is inaccessible;`, err);
+			res.writeHead(500, { 'Content-Type': 'text/html' });
+			return res.end('<h1>File not found or unreadable</h1>');
 		}
 
 		const readStream = createReadStream(filePath);
 		res.writeHead(statusCode, { 'Content-Type': 'image/png' });
 
 		readStream.pipe(res).on('error', streamErr => {
-			if (!res.headersSent) {
-				res.writeHead(500, { 'Content-Type': 'text/html' });
-				res.end('<h1>File could not be read</h1>');
-			}
 			console.error(`Stream error on file ${filePath};`, streamErr);
 			readStream.destroy();
+			res.writeHead(500, { 'Content-Type': 'text/html' });
+			res.end('<h1>File could not be read</h1>');
 		});
 	});
 };
