@@ -8,7 +8,7 @@ const morgan = require('./middlewares/morgan.js');
 const ratelimit = require('./middlewares/ratelimit.js');
 const timeout = require('./middlewares/timeout.js');
 const getClientIp = require('./middlewares/other/getClientIp.js');
-const { notFound, internalError } = require('./middlewares/other/errors.js');
+const { notFound, internalError, onTimeout } = require('./middlewares/other/errors.js');
 const { version, description } = require('./package.json');
 
 const middlewares = [
@@ -16,7 +16,11 @@ const middlewares = [
 	helmet({ crossOriginResourcePolicy: false }),
 	morgan,
 	process.env.NODE_ENV === 'production' ? ratelimit : null,
-	timeout,
+	timeout.handler({
+		timeout: 8000, // 15s
+		onTimeout,
+		disable: ['write', 'setHeaders', 'send', 'json', 'end'],
+	}),
 ].filter(Boolean);
 
 const applyMiddlewares = async (req, res) => {
