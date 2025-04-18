@@ -25,33 +25,29 @@ const DEFAULT_DISABLE_LIST = [
 	'vary',
 ];
 
-function set(timeout) {
+const validateTimeout = timeout => {
+	if (typeof timeout !== 'number' || timeout % 1 !== 0 || timeout <= 0) throw new Error('timeout must be a whole number bigger than zero');
+};
+
+const set = timeout => {
 	validateTimeout(timeout);
 
-	return function(req, res, next) {
+	return (req, res, next) => {
 		req.connection.setTimeout(timeout);
 		next();
 	};
-}
+};
 
-function handler(opts) {
-	if (opts && typeof opts.timeout !== 'undefined') {
-		validateTimeout(opts.timeout);
-	}
+const handler = opts => {
+	if (opts && typeof opts.timeout !== 'undefined') validateTimeout(opts.timeout);
 	opts = opts || {};
 
-	if (opts.onTimeout && typeof opts.onTimeout !== 'function') {
-		throw new Error('onTimeout option must be a function');
-	}
-	if (opts.onDelayedResponse && typeof opts.onDelayedResponse !== 'function') {
-		throw new Error('onDelayedResponse option must be a function');
-	}
-	if (opts.disable && !Array.isArray(opts.disable)) {
-		throw new Error('disable option must be an array');
-	}
-	const disableList = opts.disable || DEFAULT_DISABLE_LIST;
+	if (opts.onTimeout && typeof opts.onTimeout !== 'function') throw new Error('onTimeout option must be a function');
+	if (opts.onDelayedResponse && typeof opts.onDelayedResponse !== 'function') throw new Error('onDelayedResponse option must be a function');
+	if (opts.disable && !Array.isArray(opts.disable)) throw new Error('disable option must be an array');
 
-	return function(req, res, next) {
+	const disableList = opts.disable || DEFAULT_DISABLE_LIST;
+	return (req, res, next) => {
 		const start = Date.now();
 		let timeoutSocket = null;
 
@@ -94,15 +90,6 @@ function handler(opts) {
 
 		next();
 	};
-}
-
-function validateTimeout(timeout) {
-	if (typeof timeout !== 'number' || timeout % 1 !== 0 || timeout <= 0) {
-		throw new Error('timeout must be a whole number bigger than zero');
-	}
-}
-
-module.exports = {
-	set,
-	handler,
 };
+
+module.exports = { set, handler };

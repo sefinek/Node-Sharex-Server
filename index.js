@@ -16,11 +16,7 @@ const middlewares = [
 	helmet({ crossOriginResourcePolicy: false }),
 	morgan,
 	process.env.NODE_ENV === 'production' ? ratelimit : null,
-	timeout.handler({
-		timeout: 8000, // 15s
-		onTimeout,
-		disable: ['write', 'setHeaders', 'send', 'json', 'end'],
-	}),
+	timeout.handler({ timeout: 8000, onTimeout }),
 ].filter(Boolean);
 
 const applyMiddlewares = async (req, res) => {
