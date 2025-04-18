@@ -1,10 +1,10 @@
 const { access, constants, createReadStream } = require('node:fs');
 
 const IMAGES = {
-	notFound: 'images/404.png',
-	rateLimit: 'images/429.png',
-	internal: 'images/500.png',
-	timeout: 'images/503.png',
+	notFound: 'data/images/404.jpg',
+	rateLimit: 'data/images/429.jpg',
+	internal: 'data/images/500.jpg',
+	timeout: 'data/images/503.jpg',
 };
 
 const sendFile = (res, statusCode, filePath) => {
@@ -18,7 +18,7 @@ const sendFile = (res, statusCode, filePath) => {
 		}
 
 		const readStream = createReadStream(filePath);
-		res.writeHead(statusCode, { 'Content-Type': 'image/png' });
+		res.writeHead(statusCode, { 'Content-Type': 'image/jpg' });
 
 		readStream.pipe(res).on('error', streamErr => {
 			console.error(`Stream error on file ${filePath};`, streamErr);
