@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('env-native').config();
 
 const http = require('node:http');
 const helmet = require('helmet');
