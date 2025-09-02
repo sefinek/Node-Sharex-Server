@@ -1,4 +1,4 @@
-require('env-native').config();
+process.loadEnvFile();
 
 const http = require('node:http');
 const helmet = require('helmet');
