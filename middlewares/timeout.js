@@ -1,94 +1,35 @@
-// https://github.com/debitoor/express-timeout-handler/blob/master/index.js
-
-const DEFAULT_DISABLE_LIST = [
-	'setHeaders',
-	'write',
-	'send',
-	'json',
-	'status',
-	'end',
-	'writeHead',
-	'addTrailers',
-	'writeContinue',
-	'append',
-	'attachment',
-	'download',
-	'format',
-	'jsonp',
-	'location',
-	'redirect',
-	'render',
-	'sendFile',
-	'sendStatus',
-	'set',
-	'type',
-	'vary',
-];
-
 const validateTimeout = timeout => {
-	if (typeof timeout !== 'number' || timeout % 1 !== 0 || timeout <= 0) throw new Error('timeout must be a whole number bigger than zero');
+	if (!Number.isInteger(timeout) || timeout <= 0) throw new Error('timeout must be a positive integer');
 };
 
-const set = timeout => {
-	validateTimeout(timeout);
+module.exports = ({ timeoutMs, onTimeout } = {}) => {
+	if (timeoutMs !== undefined) validateTimeout(timeoutMs);
+	if (onTimeout && typeof onTimeout !== 'function') throw new Error('onTimeout must be a function');
 
 	return (req, res, next) => {
-		req.connection.setTimeout(timeout);
-		next();
-	};
-};
+		if (!timeoutMs) return next();
 
-const handler = opts => {
-	if (opts && typeof opts.timeout !== 'undefined') validateTimeout(opts.timeout);
-	opts = opts || {};
+		let fired = false;
 
-	if (opts.onTimeout && typeof opts.onTimeout !== 'function') throw new Error('onTimeout option must be a function');
-	if (opts.onDelayedResponse && typeof opts.onDelayedResponse !== 'function') throw new Error('onDelayedResponse option must be a function');
-	if (opts.disable && !Array.isArray(opts.disable)) throw new Error('disable option must be an array');
+		const timer = setTimeout(() => {
+			if (fired || res.headersSent) return;
+			fired = true;
 
-	const disableList = opts.disable || DEFAULT_DISABLE_LIST;
-	return (req, res, next) => {
-		const start = Date.now();
-		let timeoutSocket = null;
-
-		opts.timeout && req.connection.setTimeout(opts.timeout);
-
-		res.on('timeout', socket => {
-			res.globalTimeout = true;
-			timeoutSocket = socket;
-
-			if (!res.headersSent) {
-				if (opts.onTimeout) {
-					opts.onTimeout(req, res, next);
-				} else {
-					res.status(503).send('Service unavailable');
-				}
-
-				disableList.forEach(method => {res[method] = accessAttempt.bind(res, method);});
+			try {
+				onTimeout?.(req, res);
+			} catch (err) {
+				console.error('onTimeout error:', err);
 			}
-		});
+		}, timeoutMs);
 
-		res.on('finish', () => {
-			timeoutSocket && timeoutSocket.destroy();
-		});
+		const clear = () => {
+			if (fired) return;
+			clearTimeout(timer);
+		};
 
-		function accessAttempt() {
-			if (opts.onDelayedResponse) {
-				const requestTime = Date.now() - start;
-				const method = `res.${arguments[0]}`;
-				delete arguments[0];
-				const args = Object.keys(arguments).reduce((memo, key, index) => {
-					memo[index] = arguments[key];
-					return memo;
-				}, {});
-				opts.onDelayedResponse(req, method, args, requestTime);
-				opts.onDelayedResponse = null; // only call onDelayedResponse once
-			}
-			return this;
-		}
+		res.once('finish', clear);
+		res.once('close', clear);
 
 		next();
 	};
 };
-
-module.exports = { set, handler };

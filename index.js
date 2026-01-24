@@ -5,7 +5,7 @@ const cors = require('cors');
 const serveStatic = require('serve-static');
 const morgan = require('./middlewares/morgan.js');
 const rateLimit = require('./middlewares/ratelimit.js');
-const timeout = require('./middlewares/timeout.js').handler;
+const timeout = require('./middlewares/timeout.js');
 const { notFound, internalError, onTimeout } = require('./scripts/errors.js');
 const { name, version } = require('./package.json');
 const { PORT, SCREENSHOTS_PATH, NODE_ENV } = process.env;
@@ -19,9 +19,6 @@ if (!SCREENSHOTS_PATH) {
 	console.error('Environment variable SCREENSHOTS_PATH is not set.');
 	process.exit(1);
 }
-
-const cacheHeaders = res =>
-	res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
 
 const middlewares = [
 	cors(),
@@ -45,9 +42,12 @@ const applyMiddlewares = async (req, res) => {
 	}
 };
 
+const cachePublic = res => res.setHeader('Cache-Control', 'public, max-age=2073600, immutable'); // 24 days
+const cacheScreenshots = res => res.setHeader('Cache-Control', 'public, max-age=1200'); // 20 minutes
+
 const staticHandlers = [
-	serveStatic('public', { setHeaders: cacheHeaders }),
-	serveStatic(SCREENSHOTS_PATH, { setHeaders: cacheHeaders }),
+	serveStatic('public', { setHeaders: cachePublic }),
+	serveStatic(SCREENSHOTS_PATH, { setHeaders: cacheScreenshots }),
 ];
 
 const serveStaticChain = (i, req, res) => {
