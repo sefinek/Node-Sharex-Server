@@ -1,6 +1,6 @@
 {
   "name": "node-sharex-server",
-  "version": "2.2.0-rc.1+20260124",
+  "version": "2.2.0-rc.2+20260126",
   "description": "Node.js project for hosting screenshots captured with ShareX.",
   "homepage": "https://github.com/sefinek/Node-Sharex-Servert#readme",
   "bugs": {
@@ -15,7 +15,9 @@
   "main": "index.js",
   "scripts": {
     "m": "ncu -u && npm install && npm update",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pull": "git pull origin main",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "update": "npm run pull && npm ci --omit=dev && pm2 restart sharex"
   },
   "dependencies": {
     "cors": "^2.8.6",

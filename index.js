@@ -8,16 +8,13 @@ const rateLimit = require('./middlewares/ratelimit.js');
 const timeout = require('./middlewares/timeout.js');
 const { notFound, internalError, onTimeout } = require('./scripts/errors.js');
 const { name, version } = require('./package.json');
-const { PORT, SCREENSHOTS_PATH, NODE_ENV } = process.env;
+const { PORT, SCREENSHOTS_PATH, NODE_ENV, PROXY_COUNT } = process.env;
 
-if (!PORT) {
-	console.error('Environment variable PORT is not set.');
-	process.exit(1);
-}
-
-if (!SCREENSHOTS_PATH) {
-	console.error('Environment variable SCREENSHOTS_PATH is not set.');
-	process.exit(1);
+for (const [key, val] of Object.entries({ PORT, SCREENSHOTS_PATH })) {
+	if (!val) {
+		console.error(`Environment variable ${key} is not set.`);
+		process.exit(1);
+	}
 }
 
 const middlewares = [
@@ -30,8 +27,22 @@ const middlewares = [
 
 const runMiddleware = (mw, req, res) => new Promise((resolve, reject) => mw(req, res, err => (err ? reject(err) : resolve())));
 
+const proxyCount = parseInt(PROXY_COUNT, 10) || 0;
+
+const getClientIP = req => {
+	if (proxyCount > 0) {
+		const forwarded = req.headers['x-forwarded-for'];
+		if (forwarded) {
+			const parts = forwarded.split(',');
+			const index = parts.length - proxyCount;
+			if (index >= 0) return parts[index].trim();
+		}
+	}
+	return req.socket.remoteAddress;
+};
+
 const applyMiddlewares = async (req, res) => {
-	req.clientRealIP = req.headers['x-forwarded-for']?.split(',')[0].trim() || req.socket.remoteAddress;
+	req.clientRealIP = getClientIP(req);
 
 	try {
 		for (const mw of middlewares) await runMiddleware(mw, req, res);
@@ -60,7 +71,7 @@ const serveStaticChain = (i, req, res) => {
 	});
 };
 
-const server = http.createServer(async (req, res) => {
+http.createServer(async (req, res) => {
 	if (req.method !== 'GET') {
 		res.writeHead(405, { 'Content-Type': 'text/plain', 'Allow': 'GET' });
 		return res.end('Method Not Allowed');
@@ -78,6 +89,4 @@ const server = http.createServer(async (req, res) => {
 	} catch (err) {
 		internalError(err, req, res);
 	}
-});
-
-server.listen(PORT, () => process.send ? process.send('ready') : console.log(`Server running at http://127.0.0.1:${PORT}`));
+}).listen(PORT, () => process.send ? process.send('ready') : console.log(`Server running at http://127.0.0.1:${PORT}`));

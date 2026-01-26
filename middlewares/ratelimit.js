@@ -14,12 +14,12 @@ setInterval(() => {
 }, WINDOW_MS);
 
 module.exports = (req, res, next) => {
-	const currentTime = Date.now();
+	const now = Date.now();
 	const ip = req.clientRealIP;
 
 	let entry = rateLimitMap.get(ip);
-	if (!entry || currentTime - entry.startTime > WINDOW_MS) {
-		entry = { count: 1, startTime: currentTime };
+	if (!entry || now - entry.startTime > WINDOW_MS) {
+		entry = { count: 1, startTime: now };
 	} else if (++entry.count > LIMIT) {
 		return rateLimited(req, res);
 	}

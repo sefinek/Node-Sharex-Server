@@ -1,43 +1,30 @@
-const { createReadStream } = require('node:fs');
+const { readFileSync } = require('node:fs');
 
 const IMAGES = {
-	notFound: 'data/images/404.jpg',
-	rateLimit: 'data/images/429.jpg',
-	internal: 'data/images/500.jpg',
-	timeout: 'data/images/503.jpg',
+	404: readFileSync('data/images/404.jpg'),
+	429: readFileSync('data/images/429.jpg'),
+	500: readFileSync('data/images/500.jpg'),
+	503: readFileSync('data/images/503.jpg'),
 };
 
-const sendFile = (res, statusCode, filePath) => {
+const HEADERS = {
+	'Content-Type': 'image/jpeg',
+	'Cache-Control': 'public, max-age=1036800', // 12 days
+};
+
+const sendImage = (res, statusCode) => {
 	if (res.headersSent) return;
-
-	const stream = createReadStream(filePath);
-
-	res.writeHead(statusCode, {
-		'Content-Type': 'image/jpeg',
-		'Cache-Control': 'public, max-age=1036800', // 12 days
-	});
-
-	stream.on('error', err => {
-		console.error(`Stream error on file ${filePath};`, err);
-
-		if (!res.headersSent) {
-			res.writeHead(500, { 'Content-Type': 'text/html' });
-			res.end('<h1>Critical Error Occurred</h1>');
-		} else {
-			res.destroy();
-		}
-	});
-
-	stream.pipe(res);
+	res.writeHead(statusCode, HEADERS);
+	res.end(IMAGES[statusCode]);
 };
 
-exports.notFound = (_, res) => sendFile(res, 404, IMAGES.notFound);
+exports.notFound = (_, res) => sendImage(res, 404);
 
-exports.rateLimited = (_, res) => sendFile(res, 429, IMAGES.rateLimit);
+exports.rateLimited = (_, res) => sendImage(res, 429);
 
 exports.internalError = (err, _, res) => {
 	if (err) console.error(err);
-	sendFile(res, 500, IMAGES.internal);
+	sendImage(res, 500);
 };
 
-exports.onTimeout = (_, res) => sendFile(res, 503, IMAGES.timeout);
+exports.onTimeout = (_, res) => sendImage(res, 503);
