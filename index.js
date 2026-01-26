@@ -43,6 +43,7 @@ const getClientIP = req => {
 
 const applyMiddlewares = async (req, res) => {
 	req.clientRealIP = getClientIP(req);
+	console.log(`IP: ${req.clientRealIP} - URL: ${req.url}`);
 
 	try {
 		for (const mw of middlewares) await runMiddleware(mw, req, res);
