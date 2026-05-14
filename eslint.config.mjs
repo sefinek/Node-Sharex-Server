@@ -9,8 +9,6 @@ export default [
 			ecmaVersion: 'latest',
 			globals: {
 				...globals.node,
-				// ...globals.mongo,
-				// ...globals.jest,
 			},
 		},
 		rules: {
