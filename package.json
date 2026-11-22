@@ -1,6 +1,6 @@
 {
   "name": "node-sharex-server",
-  "version": "2.2.0-rc.4+20261029",
+  "version": "2.2.0+20261122",
   "private": true,
   "description": "Node.js project for hosting screenshots captured with ShareX.",
   "homepage": "https://github.com/sefinek/Node-Sharex-Servert",
